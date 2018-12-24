@@ -7,7 +7,7 @@ from .numpyx import asscalar, reshape_vec, vector_dim, vector_dim_shape, nonzero
     round_to_multiple, round_to_odd_multiple, allclose, multiply_and_sum
 from .vectorize import index, index_multi, axis_len_broadcast, slice_dim, slice_dims, take, concatenate, \
     iterate_broadcast_op, iterate_broadcast_op_multi, vectorize, subarrays, eval_iterated, eval_array_fun_chunked
-from .geometry import subtract_tangent, line_two_points, peak_crossings, peak_crossings_1D, find_peaks_iter_rmv
+from .geometry import subtract_tangent, line_two_points, peak_crossings, peak_crossings_1D, find_peaks_iter_rmv, polar_grid, polar_perm_cart, polar_reg_grid_to_rect, polar_to_cart, cart_to_polar
 from .iteralg import converge_aitken_series
 from .interpolation import interp_at, interp1d_rect, interp1d_polar, get_frac_inds, interpolating_matrix, Interp1D, \
     interp1d, interp1d_to_uniform, interp1d_n_eps, Interp1DUniform, interp1d_assume_uniform, interp1d_lin_reg, \
