@@ -86,11 +86,15 @@ def concatenate(arrays,axis):
 def iterate_broadcast_op(f,xs,axis,chunk_len=1,print_prog=False):
     """
     Gotchas: broadcasts all xs against one another, which can make calculations
-    slow."""
+    slow.
+
+    Dec 26 2018: this crashes kernel in TTB calc.
+    """
     xs=np.broadcast_arrays(*xs)
     N=xs[0].shape[axis]
     ns=range(0,N,chunk_len)
     if print_prog:
+        # TODO replace with log
         print(str(N)+' iterations:',end=' ',flush=True)
     for n in ns:
         if print_prog:
@@ -104,7 +108,7 @@ def iterate_broadcast_op(f,xs,axis,chunk_len=1,print_prog=False):
             y=np.zeros(shape,dtype=yp.dtype)
         y[slice_dim(inds,axis)]=yp
     if print_prog:
-        print('Done')
+        print('Done') # TODO replace with log
     return y
     
 def iterate_broadcast_op_multi(f,xs,axes,print_prog=False):
@@ -115,7 +119,7 @@ def iterate_broadcast_op_multi(f,xs,axes,print_prog=False):
     subshape=np.array(xs[0].shape)[axes]
     N=subshape.prod()
     if print_prog:
-        print(str(N)+' iterations:',end=' ')
+        print(str(N)+' iterations:',end=' ') # TODO replace with log
     for n in range(N):
         if print_prog:
             print(n,end=' ')
@@ -137,7 +141,7 @@ def iterate_broadcast_op_multi(f,xs,axes,print_prog=False):
             y=np.zeros(shape,dtype=yp.dtype)
         y[slc]=yp
     if print_prog:
-        print('Done')
+        print('Done') # TODO replace with log
     return y
     
 def vectorize(f,vec_dims=None,iter_dims=None,keep_iter_dims=False):
@@ -250,7 +254,7 @@ def eval_iterated(f,xs,vec_dims=None,iter_dims=None,keep_iter_dims=False,print_p
     iter_shape=np.asarray([get_axis_len(dim) for dim in iter_dims])
     iter_shape_chunks=np.ceil(iter_shape/iter_chunk_size).astype(int)
     if print_progress:
-        print('Starting ',iter_shape_chunks.prod(), ' iterations:',end='')
+        print('Starting ',iter_shape_chunks.prod(), ' iterations:',end='') # TODO replace with log
     for n in range(iter_shape_chunks.prod()):
         if print_progress:
             print(n,' ',end='',flush=True)
@@ -303,7 +307,7 @@ def eval_iterated(f,xs,vec_dims=None,iter_dims=None,keep_iter_dims=False,print_p
             y[slc]=yp
 
     if print_progress:
-        print('Done')
+        print('Done') # TODO replace with log
     return ys
 
 def eval_array_fun_chunked(f,x,axis,chunk_length=None,pool=None,log_level=1):

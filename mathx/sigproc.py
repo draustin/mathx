@@ -41,3 +41,12 @@ def xcorr_fft_1d(a, b, a_ft=False, b_ft=False, shift=True):
     if shift:
         xc = np.fft.fftshift(xc)
     return xc
+
+def thresholded(y,fraction_max=None,level=None):
+    if level is not None:
+        assert fraction_max is None
+    else:
+        level=y.max()*fraction_max
+    y=y.copy()
+    y[y<level]=0
+    return y

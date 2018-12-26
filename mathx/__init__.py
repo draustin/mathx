@@ -1,4 +1,3 @@
-# TODO remove * imports to avoid cluttering
 from .numpyx import asscalar, reshape_vec, vector_dim, vector_dim_shape, nonzero_vec, expand_dims, squeeze_leading, \
     insert_dim, argmax, ind_closest, broadcasted_shape, are_shapes_broadcastable, are_broadcastable, \
     shapes_equal_trailing, set_shape_element, broadcasted_size_along, all_axes_except, off_diag, flip, gal, geale, \
@@ -16,4 +15,4 @@ from .interpolation import interp_at, interp1d_rect, interp1d_polar, get_frac_in
 from .moments import moment, moment2, mean_and_std, mean_and_variance2, diagonalize_2d_covariance
 from .fit import gaussian, fit_gaussian, fit_sparse_1d_poly, calc_2d_correction_factors
 from .spfun import sph_harm, real_sph_harm, log10_bounded, slowing, gegenbauer
-from .sigproc import cosine_apod, cosine_window, xcorr_fft_1d, xcorr_fft_2d
+from .sigproc import cosine_apod, cosine_window, xcorr_fft_1d, xcorr_fft_2d, thresholded
