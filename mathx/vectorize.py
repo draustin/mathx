@@ -45,9 +45,9 @@ def slice_dim(slc,axis):
         axis: the axis to slice
     """
     if axis<0:
-        return [Ellipsis,slc]+[slice(None)]*(-axis-1)
+        return (Ellipsis, slc) + (slice(None), )*(-axis-1)
     else:
-        return [slice(None)]*axis+[slc,Ellipsis]
+        return (slice(None), )*axis + (slc, Ellipsis)
         
 def slice_dims(slcs,dims):
     """List of slices with slices at given positions and : everywhere else."""
