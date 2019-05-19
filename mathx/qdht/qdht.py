@@ -139,14 +139,14 @@ class QDHT:
             num_chunks = working_size/size_threshold
             chunk_length = int(math.ceil(k.shape[chunk_axis]/num_chunks))
             str = 'QDHT working size %g exceeds %g. Making %d chunks of length %d along axis %d ...'
-            logger.log(3, str, working_size, size_threshold,
+            logger.info(3, str, working_size, size_threshold,
                        num_chunks, chunk_length, chunk_axis)
             # BUG! If E runs along chunk_axis too, then this fails.
             # Et=mathx.eval_array_fun_chunked(calc_Et_from_k,k,chunk_axis,chunk_length)
             # Et=mathx.iterate_broadcast_op(calc_Et,(E,k),chunk_axis,chunk_length)
             Et = mathx.eval_iterated(calc_Et, (E, k), iter_dims=(chunk_axis,), keep_iter_dims=True, iter_chunk_size=chunk_length,
                                      print_progress=logger.level < 3)[0]
-            logger.log(3, '... QDHT done')
+            logger.info(3, '... QDHT done')
             return Et
         else:
             return calc_Et(E, k)[0]

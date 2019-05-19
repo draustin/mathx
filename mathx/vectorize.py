@@ -1,5 +1,6 @@
 import logging
 import numpy as np
+import warnings
 from . import *
 
 logger = logging.getLogger(__name__)
@@ -240,7 +241,7 @@ def subarrays(arrays, iteration_axes=None, subarray_axes=None):
         yield arrays_indexed
 
 
-def eval_iterated(f, xs, vec_dims=None, iter_dims=None, keep_iter_dims=False, print_progress=False, broadcast_xs=False,
+def eval_iterated(f, xs, vec_dims=None, iter_dims=None, keep_iter_dims=False, print_progress=None, broadcast_xs=False,
                   iter_chunk_size=1):
     """General purpose solution to making functions broadcast their arguments. 
     vec_dims and iter_dims are sequences of negative axes.
@@ -251,6 +252,8 @@ def eval_iterated(f, xs, vec_dims=None, iter_dims=None, keep_iter_dims=False, pr
     np.broadcast arrays) before being passed to f.
     f returns a sequence of values
     """
+    if print_progress is not None:
+        warnings.warn('print_progress has been replaced by logging - ignoring')
     if iter_chunk_size != 1:
         assert keep_iter_dims
     # Number of dimensions of broadcast xs
@@ -278,11 +281,9 @@ def eval_iterated(f, xs, vec_dims=None, iter_dims=None, keep_iter_dims=False, pr
 
     iter_shape = np.asarray([get_axis_len(dim) for dim in iter_dims])
     iter_shape_chunks = np.ceil(iter_shape / iter_chunk_size).astype(int)
-    if print_progress:
-        print('Starting ', iter_shape_chunks.prod(), ' iterations:', end='')  # TODO replace with log
+    logger.info('Starting %d iterations.'%iter_shape_chunks.prod())
     for n in range(iter_shape_chunks.prod()):
-        if print_progress:
-            print(n, ' ', end='', flush=True)
+        logger.debug('Iteration %d.', n)
 
         # Convert scalar 'raveled' index into unraveled indices along the iterated dimensions.
         iter_inds = np.unravel_index(n, iter_shape_chunks)
@@ -333,8 +334,7 @@ def eval_iterated(f, xs, vec_dims=None, iter_dims=None, keep_iter_dims=False, pr
         for yp, y in zip(yps, ys):
             y[slc] = yp
 
-    if print_progress:
-        print('Done')  # TODO replace with log
+    logger.info('Finished %d iterations.', iter_shape_chunks.prod())
     return ys
 
 
