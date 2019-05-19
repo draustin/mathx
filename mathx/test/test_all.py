@@ -302,15 +302,15 @@ def test_broadcasted_size_along():
 
 
 def test_find_first_nonzero():
-    assert np.asscalar(mx.find_first_nonzero([0, 1, 0, 1])) == 1
-    assert np.asscalar(mx.find_first_nonzero([0, 0, 0, 0])) == 4
+    assert mx.find_first_nonzero([0, 1, 0, 1]).item() == 1
+    assert mx.find_first_nonzero([0, 0, 0, 0]).item()== 4
     assert np.array_equal(mx.find_first_nonzero([[0, 0, 1], [0, 1, 0]], 0), [[2, 1, 0]])
     assert np.array_equal(mx.find_first_nonzero([[0, 0, 1], [0, 1, 0]], 1), [[2], [1]])
 
 
 def test_find_last_nonzero():
-    assert np.asscalar(mx.find_last_nonzero([0, 1, 0, 1])) == 3
-    assert np.asscalar(mx.find_last_nonzero([0, 0, 0, 0])) == -1
+    assert mx.find_last_nonzero([0, 1, 0, 1]).item() == 3
+    assert mx.find_last_nonzero([0, 0, 0, 0]).item() == -1
     assert np.array_equal(mx.find_last_nonzero([[0, 0, 1], [0, 1, 0]], 0), [[-1, 1, 0]])
     assert np.array_equal(mx.find_last_nonzero([[0, 0, 1], [0, 1, 0]], 1), [[2], [1]])
 

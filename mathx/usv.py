@@ -59,7 +59,7 @@ def delta(v,axis=None):
         axis=get_axis(v)
     r=v.take([1],axis)-v.take([0],axis)
     if r.size==1:
-        r=np.asscalar(r)
+        r=r.item()
     return r
     
 def zero(v,axis=None):
@@ -67,7 +67,7 @@ def zero(v,axis=None):
         axis=get_axis(v)
     r=v.take([0],axis)
     if r.size==1:
-        r=np.asscalar(r)
+        r=r.item()
     return r
     
 def is_usv(v,axis=None):

@@ -62,7 +62,8 @@ def slice_dims(slcs,dims):
         raise ValueError('All dims must have same sign')
     for dim,slc in zip(dims,slcs):
         l[dim]=slc
-    return l
+    # Non-tuple sequences for indexing is depreciated.
+    return tuple(l)
 
 def take(array,inds,axis):
     """Like numpy take, but accepts slice object as well."""
@@ -77,9 +78,11 @@ def concatenate(arrays,axis):
     arrays=[np.asarray(array) for array in arrays]
     logger.debug('Adding axes to each element of arrays as necessary')
     if axis>=0:
-        arrays=[array[[Ellipsis]+[None]*max(axis-array.ndim+1,0)] for array in arrays]
+        arrays=[array[(Ellipsis,)+(None,)*max(axis-array.ndim+1,0)] for array in arrays]
+        #[array[[Ellipsis]+[None]*max(axis-array.ndim+1,0)] for array in arrays]
     else:
-        arrays=[array[[None]*max(-axis-array.ndim,0)+[Ellipsis]] for array in arrays]
+        arrays = [array[(None,)*max(-axis - array.ndim, 0) + (Ellipsis,)] for array in arrays]
+        #arrays=[array[[None]*max(-axis-array.ndim,0)+[Ellipsis]] for array in arrays]
     logger.debug('Calling numpy.concatenate')
     return np.concatenate(arrays,axis)
     
@@ -207,7 +210,7 @@ def subarrays(arrays,iteration_axes=None,subarray_axes=None):
                 if array.shape[axis]==1:
                     continue
                 index_obj[axis]=slice(index,index+1)
-            return array[index_obj]
+            return array[tuple(index_obj)]
             # if keep_iteration_axes:
             #     indices_multi=[[index] for index in indices]
             # else:

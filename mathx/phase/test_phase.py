@@ -4,7 +4,7 @@ import numpy as np
 import mathx as mx
 from mathx import sft, phase
 
-k = np.linspace(-20, 20, 1e3)
+k = np.linspace(-20, 20, 1000)
 gk = np.exp(-0.5*k**2)
 fk = 2*np.exp(-0.5*(k - 1)**2 + 1.5j)
 
@@ -63,7 +63,7 @@ def test_approximate_phase_inflexion():
     S1 = 5
     S3 = 6
     w = 10
-    t = np.linspace(-50, 50, 5e6)
+    t = np.linspace(-50, 50, 5000000)
     S = S0 + S1*t + S3*t**3/6
     f = (g0 + g1*t)*np.exp(1j*S - 0.5*(t/w)**2)
     intf_num = np.trapz(f, t)
@@ -76,7 +76,7 @@ def test_approximate_phase_inflexion():
     S1 = 5
     S3 = 6
     w = 10
-    t = np.linspace(-50, 50, 5e6)
+    t = np.linspace(-50, 50, 5000000)
     S = S0 + S1*t + S3*t**3/6
     f = (g0 + g1*t)*np.exp(1j*S - 0.5*(t/w)**2)
     intf_num = np.trapz(f, t)
@@ -92,7 +92,7 @@ def test_integrate_quadratic_phase():
 
     xc = np.linspace(-5, 7)  # Coarse mesh
     fc = ffun(xc)
-    xf = np.linspace(-5, 7, 2e4)  # Fine mesh
+    xf = np.linspace(-5, 7, 20000)  # Fine mesh
     ff = ffun(xf)
     # Test a range of values for alpha - can even do positive imaginary numbers
     for alpha in (-0.1, 0.1, -1, 1, 5, -5, -50, 50, -100, 100, 1j, 50j, 2j - 50):

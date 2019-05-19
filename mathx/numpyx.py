@@ -4,7 +4,7 @@ import numpy as np
 
 def asscalar(x):
     """Like Numpy's asscalar but handles inputs that are already scalar."""
-    return np.asscalar(np.asarray(x))
+    return np.asarray(x).item()
 
 
 def reshape_vec(vec, axis):
@@ -76,7 +76,7 @@ def squeeze_leading(x):
     n = next((n for n in range(x.ndim) if x.shape[n] > 1), x.ndim)
     x = np.squeeze(x, tuple(range(n)))
     if x.ndim == 0:
-        x = np.asscalar(x)
+        x = x.item()
     return x
 
 
@@ -172,9 +172,11 @@ def flip(a, axis):
     """Flip array along arbitrary axis."""
     a = np.asarray(a)
     if axis >= 0:
-        return a[[slice(None)]*axis + [slice(None, None, -1)] + [Ellipsis]]
+        return a[(slice(None),)*axis + (slice(None, None, -1), Ellipsis)]
+        #a[[slice(None)]*axis + [slice(None, None, -1)] + [Ellipsis]]
     elif -axis <= a.ndim:
-        return a[[Ellipsis] + [slice(None, None, -1)] + [slice(None)]*(-axis - 1)]
+        return a[(Ellipsis, slice(None, None, -1)) + (slice(None),)*(-axis - 1)]
+        #a[[Ellipsis] + [slice(None, None, -1)] + [slice(None)]*(-axis - 1)]
     else:
         return a
 
@@ -254,7 +256,7 @@ def take_broadcast_inds(shape, inds, axis):
     """
     if axis >= 0:
         axis = axis - len(shape)
-    bc_inds = [(reshape_vec(range(shape[n]), n) if n != axis else inds) for n in range(-len(shape), 0)]
+    bc_inds = tuple((reshape_vec(range(shape[n]), n) if n != axis else inds) for n in range(-len(shape), 0))
     return bc_inds
 
 
