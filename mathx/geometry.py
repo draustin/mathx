@@ -142,6 +142,8 @@ def polar_reg_grid_to_rect(r, theta, data, theta_repeats=False, osamp=1):
     """data dimensions are r, theta. r, theta must be (1D) sequences. If theta_repeats then
     an additional theta column is added, equal to the first. This is useful
     if theta runs from e.g. 0, Delta, ..., 2*pi-Delta"""
+    assert np.ndim(r) == 1
+    assert np.ndim(theta) == 1
     max_r = r[-1]
     x = np.linspace(-max_r, max_r, len(r)*2*osamp)
     y = x[:, None]
