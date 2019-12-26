@@ -2,3 +2,7 @@
 env
 *.egg-info
 __pycache__
+.eggs
+.tox
+dist
+build
