@@ -36,3 +36,8 @@ def mean(iterable):
         # value+=element fails when numpy broadcasting
         value=value+element
     return value/num
+
+def project_onto_plane(x, n):
+    """Project x onto plane with normal n."""
+    d = dot(x, n)
+    return [xc - nc*d for xc, nc in zip(x, n)], d

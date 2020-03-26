@@ -15,6 +15,17 @@ def moment2(x, y, f, nx, ny, nrm_fac=None):
         nrm_fac = f.sum()
     return (x**nx*y**ny*f).sum()/nrm_fac
 
+def mean_and_variance(x, f):
+    """Calculate mean and variance of a function."""
+    nrm_fac = np.sum(f)
+    mean = moment(x, f, 1, nrm_fac)
+    var = moment(x - mean, f, 2, nrm_fac)
+    return mean, var
+
+def mean_and_std(x, f):
+    mean, var = mean_and_variance(x, f)
+    std = var**0.5
+    return mean, std
 
 def mean_and_variance2(x, y, f):
     """2D mean and variance calculation.
@@ -49,10 +60,3 @@ def diagonalize_2d_covariance(vx2, vy2, vxy):
     vecs = vecs[:, order]
     theta = np.arctan2(vecs[1, 1], vecs[0, 1])
     return maj, min, theta
-
-
-def mean_and_std(x, f):
-    nrm_fac = sum(f)
-    mu = moment(x, f, 1, nrm_fac=nrm_fac)
-    sigma = moment(x - mu, f, 2, nrm_fac)**0.5
-    return mu, sigma

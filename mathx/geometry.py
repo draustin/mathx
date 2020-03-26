@@ -1,3 +1,4 @@
+import math
 import numpy as np
 from scipy.ndimage.interpolation import map_coordinates
 
@@ -184,3 +185,36 @@ def polar_perm_cart(theta, phi, perm):
 
 def negate_polar(theta, phi):
     return np.pi - theta, mathx.wrap_pm(phi + np.pi, np.pi)
+
+def find_2d_grid_crossings(nx, ny, ox, oy, vx, vy):
+    """Find intersections of line with 2D grid.
+
+    The grid lines are x = 0, 1, ..., nx and y = 0, 1, ..., ny.
+
+    The line is r = o + d*v where o = (ox, oy) and v = (vx, vy).
+
+    Returns:
+        1d array: Values of d at which the line crosses a grid line. Increasing order.
+    """
+    def round_if_close(x):
+        if abs(x - round(x)) < 1e-12:
+            x = round(x)
+        return x
+    # Find 'most negative' d.
+    d = max(min(np.divide(-ox, vx), np.divide(nx - ox, vx)), min(np.divide(-oy, vy), np.divide(ny - oy, vy)))
+    x = ox + vx*d
+    y = oy + vy*d
+    crossings = [d]
+    while True:
+        xn = math.floor(x + 1) if vx > 0 else math.ceil(x - 1)
+        yn = math.floor(y + 1) if vy > 0 else math.ceil(y - 1)
+        ds = np.asarray((np.divide(xn - x, vx), np.divide(yn - y, vy)))
+        dd = min(ds[np.isfinite(ds)])
+        d += dd
+        assert dd > 0
+        x = round_if_close(x + vx*dd)
+        y = round_if_close(y + vy*dd)
+        if x < 0 or x > nx or y < 0 or y > ny:
+            break
+        crossings.append(d)
+    return np.asarray(crossings)

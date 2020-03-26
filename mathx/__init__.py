@@ -12,7 +12,11 @@ from .iteralg import converge_aitken_series
 from .interpolation import interp_at, interp1d_rect, interp1d_polar, get_frac_inds, interpolating_matrix, Interp1D, \
     interp1d, interp1d_to_uniform, interp1d_n_eps, Interp1DUniform, interp1d_assume_uniform, interp1d_lin_reg, \
     interp1d_frac_ind
-from .moments import moment, moment2, mean_and_std, mean_and_variance2, diagonalize_2d_covariance
+from .moments import moment, moment2, mean_and_std, mean_and_variance2, diagonalize_2d_covariance, mean_and_variance
 from .fit import gaussian, fit_gaussian, fit_sparse_1d_poly, calc_2d_correction_factors
 from .spfun import sph_harm, real_sph_harm, log10_bounded, slowing, gegenbauer
 from .sigproc import cosine_apod, cosine_window, xcorr_fft_1d, xcorr_fft_2d, thresholded
+from .lattices import Lattice, FiniteSquareLattice, RegularFiniteSquareLattice, RegularFiniteCenteredRectangleLattice, \
+    RegularOffsetHexLattice, FiniteSquareLatticeLattice, MarginFiniteSquareLattice  # from . import phase
+# TODO Don't want numba as mandatory dependency, so remove.
+from .numba import *
