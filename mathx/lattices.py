@@ -1,3 +1,7 @@
+"""Classes representing lattices of points.
+
+TODO tidy: dataclasses? get rid of micron?
+"""
 import itertools
 from typing import Tuple, Sequence, TypeVar, Generic
 import numpy as np
