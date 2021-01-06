@@ -1,7 +1,7 @@
 from .numpyx import asscalar, reshape_vec, vector_dim, vector_dim_shape, nonzero_vec, expand_dims, squeeze_leading, \
     insert_dim, argmax, ind_closest, broadcasted_shape, are_shapes_broadcastable, are_broadcastable, \
     shapes_equal_trailing, set_shape_element, broadcasted_size_along, all_axes_except, off_diag, flip, gal, geale, \
-    abs_sqd, norm_max, norm_sum, last_axis, diff, diff_arb, take_broadcast, take_broadcast_inds, find_first_nonzero, \
+    norm_max, norm_sum, last_axis, diff, diff_arb, take_broadcast, take_broadcast_inds, find_first_nonzero, \
     find_last_nonzero, dot_along, mat_mult_along, wrap_to_pm, wrap_to_pmh, zero_mod_2pi, unwrap, divide0, \
     round_to_multiple, round_to_odd_multiple, allclose, multiply_and_sum
 from .vectorize import index, index_multi, axis_len_broadcast, slice_dim, slice_dims, take, concatenate, \

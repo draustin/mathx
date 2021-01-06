@@ -190,10 +190,6 @@ def geale(x, a, b):
     return (x >= a) & (x <= b)
 
 
-def abs_sqd(x):
-    return np.real(x*np.conj(x))
-
-
 def norm_max(x, axis=None):
     return x/np.amax(x, axis, keepdims=True)
 
