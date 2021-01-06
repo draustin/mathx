@@ -10,8 +10,6 @@ Development version: `pip install git+https://github.com/draustin/mathx`
 
 Release version: `pip install mathx`
 
-## Development environ
-
 ## Testing
 
 Uses `tox` (with [Poetry](https://python-poetry.org/)) and `pytest`.
