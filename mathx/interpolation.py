@@ -2,6 +2,7 @@ import numpy as np
 import scipy
 import mathx
 
+
 def interp_at(x, y, x_0, der=0, axis=None):
     x = np.array(x)
     y = np.array(y)
@@ -10,28 +11,63 @@ def interp_at(x, y, x_0, der=0, axis=None):
     i_0 = np.abs(x - x_0).argmin()
     i_s = max(i_0 - 1, 0)
     i_m = min(i_0 + 2, x.shape[axis])
-    return scipy.interpolate.krogh_interpolate(x[..., i_s:i_m], y[..., i_s:i_m], x_0, der)
+    return scipy.interpolate.krogh_interpolate(
+        x[..., i_s:i_m], y[..., i_s:i_m], x_0, der
+    )
 
 
 class interp1d_rect:
-    def __init__(self, x, y, kind='linear', axis=-1, copy=True, bounds_error=None, fill_value=float('nan'),
-            assume_sorted=False):
-        self.real = scipy.interpolate.interp1d(x, y.real, kind, axis, copy, bounds_error, fill_value, assume_sorted)
-        self.imag = scipy.interpolate.interp1d(x, y.imag, kind, axis, copy, bounds_error, fill_value, assume_sorted)
+    def __init__(
+        self,
+        x,
+        y,
+        kind="linear",
+        axis=-1,
+        copy=True,
+        bounds_error=None,
+        fill_value=float("nan"),
+        assume_sorted=False,
+    ):
+        self.real = scipy.interpolate.interp1d(
+            x, y.real, kind, axis, copy, bounds_error, fill_value, assume_sorted
+        )
+        self.imag = scipy.interpolate.interp1d(
+            x, y.imag, kind, axis, copy, bounds_error, fill_value, assume_sorted
+        )
 
     def __call__(self, xi):
-        return self.real(xi) + 1j*self.imag(xi)
+        return self.real(xi) + 1j * self.imag(xi)
 
 
 class interp1d_polar:
-    def __init__(self, x, y, kind='linear', axis=-1, copy=True, bounds_error=None, fill_value=float('nan'),
-            assume_sorted=False):
-        self.abs = scipy.interpolate.interp1d(x, abs(y), kind, axis, copy, bounds_error, fill_value, assume_sorted)
-        self.phi = scipy.interpolate.interp1d(x, np.unwrap(np.angle(y), axis=axis), kind, axis, copy, bounds_error,
-                                              fill_value, assume_sorted)
+    def __init__(
+        self,
+        x,
+        y,
+        kind="linear",
+        axis=-1,
+        copy=True,
+        bounds_error=None,
+        fill_value=float("nan"),
+        assume_sorted=False,
+    ):
+        self.abs = scipy.interpolate.interp1d(
+            x, abs(y), kind, axis, copy, bounds_error, fill_value, assume_sorted
+        )
+        self.phi = scipy.interpolate.interp1d(
+            x,
+            np.unwrap(np.angle(y), axis=axis),
+            kind,
+            axis,
+            copy,
+            bounds_error,
+            fill_value,
+            assume_sorted,
+        )
 
     def __call__(self, xi):
-        return self.abs(xi)*np.exp(1j*self.phi(xi))
+        return self.abs(xi) * np.exp(1j * self.phi(xi))
+
 
 def get_frac_inds(x, xp, axis=None, suppress_degeneracy_error=False):
     """Get fractional indices using linear interpolation.
@@ -76,16 +112,20 @@ def get_frac_inds(x, xp, axis=None, suppress_degeneracy_error=False):
             delta = mathx.divide0(xpt - xb, Dx)
         else:
             assert Dx.min() > 0
-            delta = (xpt - xb)/Dx
+            delta = (xpt - xb) / Dx
         xixpt = xib + delta
         return xixpt
 
-    xixp = mathx.concatenate([get_xixpt(xpi) for xpi in range(mathx.broadcasted_size_along(xp.shape, axis))], axis)
+    xixp = mathx.concatenate(
+        [get_xixpt(xpi) for xpi in range(mathx.broadcasted_size_along(xp.shape, axis))],
+        axis,
+    )
     if xixp.ndim == -axis and xixp.shape[axis] == 1 and xixp.ndim > xp_ndim_orig:
         # The axis over which we interpolated is the leading one, and has length 1 i.e. wasn't spanned by xp. Therefore
         # its presence is an 'artefact' of the interpolation and it should be removed.
         xixp = xixp[0]
     return xixp
+
 
 def interpolating_matrix(f, n):
     """Compute matrix representing interpolation given interpolation function.
@@ -176,7 +216,7 @@ def interp1d_to_uniform(x, y, axis=None):
     mn = mn.squeeze()
     mx = mx.squeeze()
     assert x.ndim == 1
-    xu = np.arange(num)/(num - 1)*(mx - mn) + mn
+    xu = np.arange(num) / (num - 1) * (mx - mn) + mn
     yu = scipy.interpolate.interp1d(x.squeeze(), y, axis=axis, bounds_error=False)(xu)
     return mathx.reshape_vec(xu, axis), yu
 
@@ -192,7 +232,10 @@ def interp1d_n_eps(y, n, eps, axis):
     Returns:
         array: y sampled at n+eps
     """
-    return mathx.take_broadcast(y, n, axis)*(1 - eps) + mathx.take_broadcast(y, n + 1, axis)*eps
+    return (
+        mathx.take_broadcast(y, n, axis) * (1 - eps)
+        + mathx.take_broadcast(y, n + 1, axis) * eps
+    )
 
 
 class Interp1DUniform:
@@ -204,8 +247,8 @@ class Interp1DUniform:
             extrap (bool): if True, use linear extrapolation based on the extreme values.
                 If false, nearest neighbour is used for extrapolation instead.
         """
-        xi = np.array(xi, ndmin=1, copy=False)
-        nf = (xi - x0)/Dx
+        xi = np.atleast_1d(np.asarray(xi))
+        nf = (xi - x0) / Dx
         n = np.floor(nf).astype(int)
         n[n >= N - 1] = N - 2
         n[n < 0] = 0
@@ -257,4 +300,3 @@ def interp1d_frac_ind(y, xi, axis=None):
         y indexed at xi
     """
     return interp1d_lin_reg(0, 1, y, xi, axis)
-
